@@ -74,6 +74,7 @@ export default function PokeCard(props) {
                     )
                 })}
             </div>
+            <img className='default-img' src={'./pokemon/' + getFullPokedexNumber(selectedPokemon) + '.png'} />
         </div>
     )
 }
