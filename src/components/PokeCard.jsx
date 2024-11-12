@@ -28,19 +28,19 @@ export default function PokeCard(props) {
         }
 
         if (move in c ) {
-            setSkill(c(move))
+            setSkill(c[move])
             console.log('Found move in cache')
             return
         }
 
         try {
             setLoadingSkill(true)
-            const res = fetch(moveUrl)
-            const moveData = res.json()
+            const res = await fetch(moveUrl)
+            const moveData = await res.json()
             console.log('Fetched move from API', moveData)
-            const description = moveData?.flavour_text_entries.filter(val => {
-                return val.version_group.name = 'firered-leafgreen'
-            })[0]?.flavour_text
+            const description = moveData?.flavor_text_entries.filter(val => {
+                return val.version_group.name === 'firered-leafgreen'
+            })[0]?.flavor_text
 
             const skillData = {
                 name: move,
@@ -114,11 +114,11 @@ export default function PokeCard(props) {
                 <Modal handleCloseModal={() => { setSkill(null) }}>
                     <div>
                         <h6>Name</h6>
-                        <h2></h2>
+                        <h2 className="skill-name">{skill.name.replaceAll('-', ' ')}</h2>
                     </div>
                     <div>
                         <h6>Description</h6>
-                        <p>asdasd</p>
+                        <p>{skill.description}</p>
                     </div>
                 </Modal>
             )}
@@ -158,7 +158,8 @@ export default function PokeCard(props) {
             <div className='pokemon-move-grid'>
                 {moves.map((moveObj, moveIndex) => {
                     return (
-                        <button className='button-card pokemon-move' key={moveIndex} onClick={() => {}}>
+                        <button className='button-card pokemon-move' key={moveIndex} onClick={() => {fetchMoveData(moveObj?.move?.name, moveObj?.move?.url)}}
+                        >
                             <p>{moveObj?.move?.name.replaceAll('-', ' ')}</p>
                         </button>
                     )
